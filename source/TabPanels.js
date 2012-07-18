@@ -1,4 +1,6 @@
 ﻿/**
+copy from WIP onyx/enyo.TabPanels with some small modifications
+
 enyo.TabPanels is a subkind of <a href="#enyo.Panels">enyo.Panels</a> that
 displays a set of tabs, which allow navigation between the individual panels.
 Unlike enyo.Panels, by default, the user cannot drag between the panels of a

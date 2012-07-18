@@ -293,6 +293,10 @@ enyo.kind({
 		level:  {map:''}
 	},
 
+	events: {
+		onMineChanged: ""
+	},
+
 	components: [
 		{ kind: "lamin.center", fit: true, components: [ { name: "wrapper", components: [
 			{ kind: "enyo.FittableRows", components: [
@@ -352,7 +356,7 @@ enyo.kind({
 
 	rendered: function() {
 		this.inherited(arguments);
-		this.$.moves.setValue('');
+		this.$.moves.setValue(this.mine ? this.mine.moves : '');
 	},
 
 	levelChanged: function() {
@@ -375,6 +379,7 @@ enyo.kind({
 		this.$.flooding.setContent(this.mine.water.flooding ? (this.mine.moves.length % this.mine.water.flooding) + "/" + this.mine.water.flooding : '');
 		this.$.beard.setContent(this.mine.beard.growth ? (this.mine.moves.length % this.mine.beard.growth) + "/" + this.mine.beard.growth : '');
 		this.$.underwater.setContent((this.mine.water.flooding || this.mine.water.level > 0) ? this.mine.moves_below_water + "/" + this.mine.water.proof : '');
+		this.doMineChanged({mine: this.mine});
 	},
 
 	_addMoves: function(moves) {
@@ -640,7 +645,7 @@ enyo.kind({
 	index: 0,
 	
 	components: [
-		{ name: "game", kind: "lamin.Game", caption: "Play" },
+		{ name: "game", kind: "lamin.Game", caption: "Play", onMineChanged: "handleMineChanged" },
 		{ caption: "Help", kind: "lamin.Text", text: lamin.helpText },
 		{ caption: "Rules", kind: "lamin.Text", text: lamin.rulesText },
 
@@ -669,12 +674,30 @@ enyo.kind({
 
 		this.$.scroller.createComponents(this.tabComponents, { owner: this })
 
+		// restore previous state on refresh from url fragment
+		var fragment = window.location.hash.slice(1).split(';');
+		var searchMap = fragment[0];
+		var loadMoves = '';
+
+		this.levelIndex = 0;
 		var levels = this.levels = [];
 		for (var k in mineMaps) {
-			if (mineMaps.hasOwnProperty(k)) levels.push({name: k, map: mineMaps[k]});
+			if (mineMaps.hasOwnProperty(k)) {
+				if (k === searchMap) {
+					this.levelIndex = levels.length;
+					if (fragment.length > 1) loadMoves = fragment[1];
+				}
+				levels.push({name: k, map: mineMaps[k]});
+			}
 		}
 		this.level = false;
 		this.levelsChanged();
+		this.fragmentUpdateTimer = false;
+
+		if (loadMoves !== '') {
+	// 		console.log("preset moves: " + loadMoves);
+			this.$.game.addMoves(loadMoves);
+		}
 	},
 
 	levelMenuSetupItem: function(sender, event) {
@@ -708,6 +731,17 @@ enyo.kind({
 		this.$.levelMenu.setCount(this.levels.length);
 		this.$.levelMenu.reset();
 		this.levelIndexChanged();
+	},
+
+	handleMineChanged: function(sender, event) {
+		if (false !== this.fragmentUpdateTimer) {
+			window.clearTimeout(this.fragmentUpdateTimer);
+		}
+		var url = '#' + this.level.name + ';' + event.mine.moves;
+		window.setTimeout(function() {
+			this.fragmentUpdateTimer = false;
+			location.replace(url);
+		}.bind(this), 100);
 	},
 
 	_handleKeydown: function(event) {
