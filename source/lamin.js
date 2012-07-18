@@ -1,6 +1,6 @@
 
 enyo.kind({
-	name: "center",
+	name: "lamin.center",
 	kind: "enyo.Control",
 
 	fit: true,
@@ -29,7 +29,7 @@ enyo.kind({
 });
 
 enyo.kind({
-	name: "simulator.Sprite",
+	name: "lamin.Sprite",
 	kind: "enyo.Control",
 	tag: "canvas",
 
@@ -62,11 +62,11 @@ enyo.kind({
 		this.sprite.onerror = function(error) {
 			console.log("sprite load error", error);
 		};
-		this.sprite.src = simulator.Sprite.spriteSrc;
+		this.sprite.src = lamin.Sprite.spriteSrc;
 
-		this.offsetsNormal = this._extractOffsets(simulator.Sprite.offsetMapNormal);
-		this.offsetsLost = this._extractOffsets(simulator.Sprite.offsetMapLost);
-		this.offsetsWon = this._extractOffsets(simulator.Sprite.offsetMapWon);
+		this.offsetsNormal = this._extractOffsets(lamin.Sprite.offsetMapNormal);
+		this.offsetsLost = this._extractOffsets(lamin.Sprite.offsetMapLost);
+		this.offsetsWon = this._extractOffsets(lamin.Sprite.offsetMapWon);
 	},
 
 	_extractOffsets: function(offsetMap) {
@@ -130,7 +130,7 @@ enyo.kind({
 });
 
 enyo.kind({
-	name: "simulator.SpriteImage",
+	name: "lamin.SpriteImage",
 	kind: "enyo.Control",
 
 	tag: "img",
@@ -180,7 +180,7 @@ enyo.kind({
 });
 
 enyo.kind({
-	name: "simulator.Canvas",
+	name: "lamin.Canvas",
 	kind: "enyo.Control",
 
 	tag: "canvas",
@@ -192,7 +192,7 @@ enyo.kind({
 	},
 
 	components: [
-		{ name: "sprite", kind: "simulator.Sprite", onLoad: "onSpriteLoad" }
+		{ name: "sprite", kind: "lamin.Sprite", onLoad: "onSpriteLoad" }
 	],
 
 	events: {
@@ -282,7 +282,7 @@ enyo.kind({
 });
 
 enyo.kind({
-	name: "simulator.Game",
+	name: "lamin.Game",
 
 	classes: "enyo-arranger-fit enyo-fit",
 	fit: true,
@@ -294,7 +294,7 @@ enyo.kind({
 	},
 
 	components: [
-		{ kind: "center", fit: true, components: [ { name: "wrapper", components: [
+		{ kind: "lamin.center", fit: true, components: [ { name: "wrapper", components: [
 			{ kind: "enyo.FittableRows", components: [
 				{ name: "movesDeco", kind: "onyx.InputDecorator", layoutKind: "enyo.FittableColumnsLayout",  components: [
 					{ content: "Moves: " },
@@ -304,35 +304,35 @@ enyo.kind({
 				{ kind: "enyo.FittableColumns", classes: "enyo-unselectable", noStretch: true, components: [
 					{ kind: "enyo.FittableRows", style: "width: 80px;padding-right: 10px", components: [
 						{ kind: "enyo.FittableColumns", components: [
-							{ kind: "simulator.SpriteImage", type: 'star', size: 24 },
+							{ kind: "lamin.SpriteImage", type: 'star', size: 24 },
 							{ name: "score", content: "0", style: "text-align: right;", fit: true }
 						] },
 						{ kind: "enyo.FittableColumns", components: [
-							{ kind: "simulator.SpriteImage", type: '\\', size: 24 },
+							{ kind: "lamin.SpriteImage", type: '\\', size: 24 },
 							{ name: "lambdas", content: "0/0", style: "text-align: right;", fit: true }
 						] },
-						{ kind: "enyo.FittableColumns", components: [
-							{ kind: "simulator.SpriteImage", type: 'minerwater', size: 24 },
+						{ name: "waterRow1", kind: "enyo.FittableColumns", components: [
+							{ kind: "lamin.SpriteImage", type: 'minerwater', size: 24 },
 							{ name: "underwater", content: "", style: "text-align: right;", fit: true }
 						] },
-						{ kind: "enyo.FittableColumns", components: [
+						{ name: "waterRow2", kind: "enyo.FittableColumns", components: [
 							{ content: "\u223C", style: "color: blue;text-align:center;width:24px;" },
 							{ name: "flooding", content: "", style: "text-align: right;", fit: true }
 						] },
-						{ kind: "enyo.FittableColumns", components: [
-							{ kind: "simulator.SpriteImage", type: '!', size: 24 },
+						{ name: "beardRow1", kind: "enyo.FittableColumns", components: [
+							{ kind: "lamin.SpriteImage", type: '!', size: 24 },
 							{ name: "razors", content: "0", style: "text-align: right;", fit: true }
 						] },
-						{ kind: "enyo.FittableColumns", components: [
-							{ kind: "simulator.SpriteImage", type: 'W', size: 24 },
+						{ name: "beardRow2", kind: "enyo.FittableColumns", components: [
+							{ kind: "lamin.SpriteImage", type: 'W', size: 24 },
 							{ name: "beard", content: "", style: "text-align: right;", fit: true }
 						] }
 					] },
-					{ name: "canvas", kind: "simulator.Canvas", onSizeChanged: "onCanvasSizeChanged" },
+					{ name: "canvas", kind: "lamin.Canvas", onSizeChanged: "onCanvasSizeChanged" },
 					{ name: "notrampolines", kind: "enyo.FittableRows", style: "width: 80px;padding-left: 10px", components: [
 						{ kind: "enyo.FittableColumns", components: [
 							{ content: "No", style: "width: 46px" }, // fit doesn't work here.
-							{ kind: "simulator.SpriteImage", type: 'trampoline', size: 24 }
+							{ kind: "lamin.SpriteImage", type: 'trampoline', size: 24 }
 						] }
 					] },
 					{ name: "trampolines", kind: "enyo.FittableRows", style: "width: 80px;padding-left: 10px" }
@@ -343,7 +343,7 @@ enyo.kind({
     ],
 
 	statics: {
-		validMoves: {L:1,U:1,R:1,D:1,/*A:1,*/W:1,S:1}
+		validMoves: {L:1,U:1,R:1,D:1,W:1,S:1}
 	},
 
 	create: function() {
@@ -352,7 +352,7 @@ enyo.kind({
 
 	rendered: function() {
 		this.inherited(arguments);
-		this.$.moves.setValue(this.moves);
+		this.$.moves.setValue('');
 	},
 
 	levelChanged: function() {
@@ -364,26 +364,26 @@ enyo.kind({
 		var n = this.$.moves.hasNode();
 		var atend = (n && n.selectionStart === this.$.moves.getValue().length);
 		var inputHasFocus = document.activeElement === this.$.moves.hasNode();
-		this.$.moves.setValue(this.moves);
+		this.$.moves.setValue(this.mine.moves);
 		if (atend && n.setSelectionRange) {
-			n.setSelectionRange(this.moves.length, this.moves.length);
+			n.setSelectionRange(this.mine.moves.length, this.mine.moves.length);
 			if (!inputHasFocus) this.$.moves.hasNode().blur();
 		}
 		this.$.score.setContent(this.mine.score);
-		this.$.moveCount.setContent("&nbsp;" + this.moves.length);
+		this.$.moveCount.setContent("&nbsp;" + this.mine.moves.length);
 		this.$.lambdas.setContent(this.mine.found_lambdas + "/" + (this.mine.lambdas+this.mine.found_lambdas));
-		this.$.flooding.setContent(this.mine.water.flooding ? (this.moves.length % this.mine.water.flooding) + "/" + this.mine.water.flooding : '');
-		this.$.beard.setContent(this.mine.beard.growth ? (this.moves.length % this.mine.beard.growth) + "/" + this.mine.beard.growth : '');
+		this.$.flooding.setContent(this.mine.water.flooding ? (this.mine.moves.length % this.mine.water.flooding) + "/" + this.mine.water.flooding : '');
+		this.$.beard.setContent(this.mine.beard.growth ? (this.mine.moves.length % this.mine.beard.growth) + "/" + this.mine.beard.growth : '');
 		this.$.underwater.setContent((this.mine.water.flooding || this.mine.water.level > 0) ? this.mine.moves_below_water + "/" + this.mine.water.proof : '');
 	},
 
 	_addMoves: function(moves) {
-		var validMoves = simulator.Game.validMoves;
+		moves = moves.toUpperCase();
+		var validMoves = lamin.Game.validMoves;
 		for (var i = 0; i < moves.length; ++i) {
 			if (this.mine.state != Mine.ALIVE) break;
 			if (validMoves[moves[i]]) {
 				this.mine.move(moves[i]);
-				this.moves += moves[i];
 			}
 		}
 	},
@@ -423,9 +423,9 @@ enyo.kind({
 		for (k = 0; k < ts.length; ++k) {
 			this.$.trampolines.createComponent(
 				{ kind: "enyo.FittableColumns", components: [
-					{ kind: "simulator.SpriteImage", type: ts[k], size: 24 },
+					{ kind: "lamin.SpriteImage", type: ts[k], size: 24 },
 					{ content: "\u21AA", style: "text-align:center; width: 22px" },
-					{ kind: "simulator.SpriteImage", type: t.sources[ts[k]].target, size: 24 }
+					{ kind: "lamin.SpriteImage", type: t.sources[ts[k]].target, size: 24 }
 				] }, { owner: this }
 			);
 		}
@@ -438,7 +438,10 @@ enyo.kind({
 			this.$.notrampolines.show();
 		}
 
-		this.moves = "";
+		this.$.waterRow1.setShowing(this.mine.water.active);
+		this.$.waterRow2.setShowing(this.mine.water.active);
+		this.$.beardRow1.setShowing(this.mine.beard.active);
+		this.$.beardRow2.setShowing(this.mine.beard.active);
 	},
 	resetMoves: function() {
 		this._resetMoves();
@@ -446,16 +449,14 @@ enyo.kind({
 	},
 
 	undoMove: function() {
-		var moves = this.moves.slice(0, -1);
-		this._resetMoves();
-		this._addMoves(moves);
+		this.mine.undo();
 		this._mineChanged();
 	},
 
 	_handleKeydown: function(event) {
 		if (event.ctrlKey || event.altKey || event.metaKey) return false;
 
-		var validMoves = simulator.Game.validMoves;
+		var validMoves = lamin.Game.validMoves;
 		// ascii keys are reported as uppercase ascii code
 		var cmd = String.fromCharCode(event.keyCode);
 		if (validMoves[cmd]) {
@@ -469,17 +470,21 @@ enyo.kind({
 		case 13: // focus text field
 			this.$.moves.focus();
 			break;
-		case 37: // left
-			if (this.mine.validMove('L')) this.addMoves('L');
+		case 37: // cursor left
+			if (!this.mine.validMove('L')) break;
+			this.addMoves('L');
 			break;
-		case 38: // up
-			if (this.mine.validMove('U')) this.addMoves('U');
+		case 38: // cursor up
+			if (!this.mine.validMove('U')) break;
+			this.addMoves('U');
 			break;
-		case 39: // right
-			if (this.mine.validMove('R')) this.addMoves('R');
+		case 39: // cursor right
+			if (!this.mine.validMove('R')) break;
+			this.addMoves('R');
 			break;
-		case 40: // down
-			if (this.mine.validMove('D')) this.addMoves('D');
+		case 40: // cursor down
+			if (!this.mine.validMove('D')) break;
+			this.addMoves('D');
 			break;
 		default:
 			return false;
@@ -512,7 +517,7 @@ enyo.kind({
 	}
 });
 
-simulator.helpText = '\
+lamin.helpText = '\
 <h3>Goal</h3>\
 <p>The goal is to collect all lambdas <img src="assets/lambda.png" height="20" width="20"> with the miner <img src="assets/miner.png" height="20" width="20"><br>\
 and reach the then open lift <img src="assets/openlift.png" height="20" width="20">.</p>\
@@ -522,7 +527,7 @@ and don\'t drown in the rising water</p>\
 bonus points <img src="assets/star.png" height="20" width="20"> per collected lambda <img src="assets/lambda.png" height="20" width="20">, and dieing costs 25 points <img src="assets/star.png" height="20" width="20"> per lambda <img src="assets/lambda.png" height="20" width="20">;<br>\
 also each move costs 1 point. Try to get the highest score possible!</p>\
 <p>When you enter a trampoline <img src="assets/trampoline.png" height="20" width="20"> you will get teleported to the target <img src="assets/target.png" height="20" width="20">.<br>\
-The mapping with multiple trampolines and targets is shown on the right side.</p>\
+The mapping for multiple trampolines and targets is shown on the right side.</p>\
 \
 <table class="help-keys">\
 <tr><th>Key</th><th>Action</th></tr>\
@@ -543,7 +548,7 @@ This game is a result of the <a href="http://icfpcontest2012.wordpress.com/">ICF
 The implementation was coded by Stefan B&uuml;hler in 2012, the images are based on the official ones.\
 ';
 
-simulator.rulesText = '\
+lamin.rulesText = '\
 <h3>Rules</h3>\
 <p>The rules were defined for the <a href="http://icfpcontest2012.wordpress.com/task/">task</a> of implementing a solver<br>\
 for the mazes for the <a href="http://icfpcontest2012.wordpress.com/">ICFP Programming Contest 2012</a>.<br>\
@@ -601,7 +606,7 @@ removed.</li>\
 
 
 enyo.kind({
-	name: "simulator.Text",
+	name: "lamin.Text",
 
 	published: {
 		text: ""
@@ -635,9 +640,9 @@ enyo.kind({
 	index: 0,
 	
 	components: [
-		{ name: "game", kind: "simulator.Game", caption: "Play" },
-		{ caption: "Help", kind: "simulator.Text", text: simulator.helpText },
-		{ caption: "Rules", kind: "simulator.Text", text: simulator.rulesText },
+		{ name: "game", kind: "lamin.Game", caption: "Play" },
+		{ caption: "Help", kind: "lamin.Text", text: lamin.helpText },
+		{ caption: "Rules", kind: "lamin.Text", text: lamin.rulesText },
 
 		{ kind: "Signals", onkeydown: "handleKeydown" }
 	],

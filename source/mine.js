@@ -34,23 +34,27 @@ var Mine = function() {
 		this.map = map = lines.splice(0, height).reverse();
 		this.lambdas = 0;
 		this.found_lambdas = 0;
-		this.moves = 0;
+		this.moveCount = 0;
+		this.moves = "";
 		this.score = 0;
 		this.moves_below_water = 0;
 		this.water = {
 			level: 0,
 			flooding: 0,
-			proof: 10
+			proof: 10,
+			active: false // whether we have flooding or level > 0
 		};
 		
 		this.lift = this.robot = false;
 		this.trampoline = {
 			sources: { }, // x, y and target
-			targets: { }  // x, y and sources
+			targets: { }, // x, y and sources
+			active: false // whether we have any trampolines
 		};
 		this.beard = {
 			growth: 25,
-			razors: 0
+			razors: 0,
+			active: false // whether we have any beard or razors
 		};
 		map.splice(height, 0, repeat('#', width));
 		map.splice(0, 0, repeat('#', width), repeat('#', width));
@@ -70,8 +74,10 @@ var Mine = function() {
 				case '*':
 				case '#':
 				case '.':
+					break;
 				case 'W':
 				case '!':
+					this.beard.active = true;
 					break;
 				case '@':
 				case '\\':
@@ -89,7 +95,7 @@ var Mine = function() {
 					if (line[x] >= 'A' && line[x] <= 'I') {
 						if (this.trampoline.sources[line[x]]) throw "Can have only one trampoline " + line[x];
 						this.trampoline.sources[line[x]] = { x: x, y: i, target: false };
-						this.trampoline.fromSources
+						this.trampoline.active = true;
 					} else if (line[x] >= '1' && line[x] <= '9') {
 						if (this.trampoline.targets[line[x]]) throw "Can have only one trampoline target " + line[x];
 						this.trampoline.targets[line[x]] = { x: x, y: i, sources: [] };
@@ -143,6 +149,7 @@ var Mine = function() {
 				break;
 			}
 		}
+		this.water.active = this.water.level > 0 || this.water.flooding != 0;
 		for (i in this.trampoline.sources) {
 			if (this.trampoline.sources.hasOwnProperty(i)) {
 				if (!this.trampoline.sources[i].target) throw "Trampoline " + i + " has no target";
@@ -210,14 +217,21 @@ var Mine = function() {
 		case 'W':
 		case 'S':
 			return this.razors > 0;
-		case 'A':
-			return true;
 		}
 		return false;
 	};
 	
+	Mine.prototype.undo = function(command) {
+		var moves = this.moves;
+		this.parse(this.orig_map);
+		for (var i = 0; i < moves.length - 1; ++i){
+			this.move(moves[i]);
+		}
+	};
+	
 	Mine.prototype.move = function(command) {
 		if (this.state != ALIVE) return false;
+		if (!{'L':1,'R':1,'U':1,'D':1,'W':1,'S':1}[command]) return false;
 		var n, c, s, t;
 		var newMap, x, y, i, j, below, map = this.map, growBeard;
 		command = command.toUpperCase();
@@ -297,12 +311,10 @@ var Mine = function() {
 					if ('W' == map[this.robot.y+i][this.robot.x+j]) map[this.robot.y+i][this.robot.x+j] = ' ';
 				}
 				break;
-			case 'A':
-				this._abort();
-				return;
 			}
 		}
-		this.moves++;
+		this.moveCount++;
+		this.moves += command;
 		if (0 == this.lambdas) {
 			if (false !== this.lift) {
 				/* skip 'L' == this.map[this.lift.y][this.lift.x] - official validator replaces
@@ -314,7 +326,7 @@ var Mine = function() {
 		
 		newMap = [];
 		growBeard = false;
-		if (this.beard.growth > 0 && 0 == (this.moves % this.beard.growth)) {
+		if (this.beard.growth > 0 && 0 == (this.moveCount % this.beard.growth)) {
 			growBeard = true;
 		}
 		for (y = 0; y < map.length; ++y) { newMap[y] = this.map[y].slice(); }
@@ -358,20 +370,20 @@ var Mine = function() {
 		} else {
 			this.moves_below_water = 0;
 		}
-		if (this.water.flooding > 0 && 0 == (this.moves % this.water.flooding)) {
+		if (this.water.flooding > 0 && 0 == (this.moveCount % this.water.flooding)) {
 			++this.water_level;
 		}
 		
 		switch (this.state) {
 		case LOST:
-			this.score = 25*this.found_lambdas - this.moves;
+			this.score = 25*this.found_lambdas - this.moveCount;
 			break;
 		case WON:
-			this.score = 75*this.found_lambdas - this.moves;
+			this.score = 75*this.found_lambdas - this.moveCount;
 			break;
 		case ALIVE:
 		case ABORTED:
-			this.score = 50*this.found_lambdas - this.moves;
+			this.score = 50*this.found_lambdas - this.moveCount;
 			break;
 		}
 	};
