@@ -608,8 +608,8 @@ The mapping for multiple trampolines and targets is shown on the right side.</p>
 <br><br>\
 This game is a result of the <a href="http://icfpcontest2012.wordpress.com/">ICFP Programming Contest 2012</a>.<br>\
 \
-The implementation was coded by Stefan B&uuml;hler in 2012, the images are based on the official ones.<br>\
-Based on the <a href="http://enyojs.com/">Enyo</a> framework (+<a href="https://github.com/enyojs/layout">layout</a>+<a href="https://github.com/enyojs/onyx">onyx</a>).
+The <a href="https://github.com/stbuehler/lamin">implementation</a> was coded by Stefan B&uuml;hler in 2012, the images are based on the official ones.<br>\
+Based on the <a href="http://enyojs.com/">Enyo</a> framework (+<a href="https://github.com/enyojs/layout">layout</a>+<a href="https://github.com/enyojs/onyx">onyx</a>).\
 ';
 
 lamin.rulesText = '\
