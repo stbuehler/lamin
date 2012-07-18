@@ -219,6 +219,7 @@ var Mine = function() {
 			}
 			break;
 		case 'W':
+			return true;
 		case 'S':
 			return this.razors > 0;
 		}
