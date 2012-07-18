@@ -196,12 +196,38 @@ enyo.kind({
 	],
 
 	events: {
-		onSizeChanged:""
+		onSizeChanged: "",
+		onTileTap: ""
 	},
 
 	create: function() {
 		this.inherited(arguments);
 		this.tileSize = 32;
+	},
+
+	gridCoords: function(event) {
+		var totalOffsetX = 0;
+		var totalOffsetY = 0;
+
+		for (var e = this.hasNode(); e; e = e.offsetParent) {
+			totalOffsetX += e.offsetLeft;
+			totalOffsetY += e.offsetTop;
+		}
+
+		var X = -0.5 + ((event.pageX - totalOffsetX) / this.tileSize);
+		var Y = -0.5 + ((event.pageY - totalOffsetY) / this.tileSize);
+
+		return { x: X, y: this.mine.height - Y - 1 };
+	},
+
+	tap: function(sender, event) {
+		var coords = this.gridCoords(event);
+		event.tileXf = coords.x;
+		event.tileYf = coords.y;
+		event.tileX = Math.round(coords.x);
+		event.tileY = Math.round(coords.y);
+		this.doTileTap(event);
+		this.inherited(arguments);
 	},
 
 	onSpriteLoad: function() {
@@ -332,7 +358,7 @@ enyo.kind({
 							{ name: "beard", content: "", style: "text-align: right;", fit: true }
 						] }
 					] },
-					{ name: "canvas", kind: "lamin.Canvas", onSizeChanged: "onCanvasSizeChanged" },
+					{ name: "canvas", kind: "lamin.Canvas", onSizeChanged: "onCanvasSizeChanged", onTileTap: "onCanvasTileTap" },
 					{ name: "notrampolines", kind: "enyo.FittableRows", style: "width: 80px;padding-left: 10px", components: [
 						{ kind: "enyo.FittableColumns", components: [
 							{ content: "No", style: "width: 46px" }, // fit doesn't work here.
@@ -410,6 +436,35 @@ enyo.kind({
 // 		this.reflow();
 	},
 
+	onCanvasTileTap: function(sender, event) {
+// 		console.log("tapped: ", event.tileX, "/", event.tileY);
+		var r = this.mine.getRobot();
+		var dx = event.tileXf - r.x;
+		var dy = event.tileYf - r.y;
+		var ndx = dx ? dx > 0 ? 1 : -1 : 0;
+		var ndy = dy ? dy > 0 ? 1 : -1 : 0;
+		var m = dx ? Math.abs(dy/dx) : 100 /* "big" */;
+// 		console.log("tapped: ", dx, dy, ndx, ndy, m);
+		var gox, goy;
+		if (0 == Math.round(dx) && 0 == Math.round(dy)) {
+			return;
+		}
+		if (m < 0.38268343) {
+			goy = 0; gox = ndx;
+		} else if (m > 2.6131259) {
+			gox = 0; goy = ndy;
+		} else {
+			gox = ndx; goy = ndy;
+		}
+		var cmd;
+		if (this.mine.get(r.x + gox, r.y + goy) == 'W') {
+			cmd = "S";
+		} else {
+			cmd = (m < 1) ? (ndx < 0 ? "L" : "R") : (ndy < 0 ? "D" : "U");
+		}
+		if (this.mine.validMove(cmd)) this.addMoves(cmd);
+	},
+
 	_resetMoves: function() {
 		this.mine = new Mine(this.level.map);
 		this.$.canvas.setMine(this.mine);
@@ -461,10 +516,9 @@ enyo.kind({
 	_handleKeydown: function(event) {
 		if (event.ctrlKey || event.altKey || event.metaKey) return false;
 
-		var validMoves = lamin.Game.validMoves;
 		// ascii keys are reported as uppercase ascii code
 		var cmd = String.fromCharCode(event.keyCode);
-		if (validMoves[cmd]) {
+		if (this.min.validMove(cmd)) {
 			this.addMoves(cmd);
 		} else if (cmd == 'C') { // clear
 			this.resetMoves();
@@ -476,18 +530,22 @@ enyo.kind({
 // 			this.$.moves.focus();
 // 			break;
 		case 37: // cursor left
+		case 74: // 'J'
 			if (!this.mine.validMove('L')) break;
 			this.addMoves('L');
 			break;
 		case 38: // cursor up
+		case 73: // 'I'
 			if (!this.mine.validMove('U')) break;
 			this.addMoves('U');
 			break;
 		case 39: // cursor right
+		case 76: // 'L'
 			if (!this.mine.validMove('R')) break;
 			this.addMoves('R');
 			break;
 		case 40: // cursor down
+		case 75: // 'K'
 			if (!this.mine.validMove('D')) break;
 			this.addMoves('D');
 			break;
@@ -536,18 +594,17 @@ The mapping for multiple trampolines and targets is shown on the right side.</p>
 \
 <table class="help-keys">\
 <tr><th>Key</th><th>Action</th></tr>\
-<tr><td class="help-key"><b>L</b> or <b>&larr;</b></td><td>Move left</td></tr>\
-<tr><td class="help-key"><b>U</b> or <b>&uarr;</b></td><td>Move up</td></tr>\
-<tr><td class="help-key"><b>R</b> or <b>&rarr;</b></td><td>Move right</td></tr>\
-<tr><td class="help-key"><b>D</b> or <b>&darr;</b></td><td>Move down</td></tr>\
+<tr><td class="help-key"><b>J</b>, <b>L</b> or <b>&larr;</b></td><td>Move left</td></tr>\
+<tr><td class="help-key"><b>I</b>, <b>U</b> or <b>&uarr;</b></td><td>Move up</td></tr>\
+<tr><td class="help-key"><b>L</b>, <b>R</b> or <b>&rarr;</b></td><td>Move right</td></tr>\
+<tr><td class="help-key"><b>K</b>, <b>D</b> or <b>&darr;</b></td><td>Move down</td></tr>\
 <tr><td class="help-key"><b>W</b></td><td>Wait</td></tr>\
 <tr><td class="help-key"><b>S</b></td><td>Shave beards in the surrounding cells, costs 1 <img src="assets/razor.png" height="20" width="20"></td></tr>\
 <tr><td class="help-key">Backspace</td><td>Undo last move</td></tr>\
 <tr><td class="help-key"><b>C</b></td><td>Restart level</td></tr>\
 <tr><td class="help-key">Page up/down</td><td>Select previous/next level</td></tr>\
 </table>\
-<p>Cursor keys only work when the move is valid;<br> otherwise invalid moves will be executed as Wait</p>\
-\
+<br><br>\
 This game is a result of the <a href="http://icfpcontest2012.wordpress.com/">ICFP Programming Contest 2012</a>.<br>\
 \
 The implementation was coded by Stefan B&uuml;hler in 2012, the images are based on the official ones.\
@@ -734,7 +791,10 @@ enyo.kind({
 					{name: "levelMenuItem", classes: "enyo-border-box", ontap: "levelMenuSelected"}
 				] }
 			] }
-		] }
+		] },
+		{ kind: "onyx.Button", style: "margin: 5px", content: "Wait", ontap: "wait" },
+		{ kind: "onyx.Button", style: "margin: 5px", content: "Undo", ontap: "undo" },
+		{ kind: "onyx.Button", style: "margin: 5px", content: "Clear", ontap: "clear" }
 	],
 
 	published: {
@@ -818,6 +878,18 @@ enyo.kind({
 			this.fragmentUpdateTimer = false;
 			location.replace(url);
 		}.bind(this), 100);
+	},
+
+	undo: function() {
+		this.$.game.undoMove();
+	},
+
+	clear: function() {
+		this.$.game.resetMoves();
+	},
+
+	wait: function() {
+		this.$.game.addMoves("W");
 	},
 
 	_handleKeydown: function(event) {

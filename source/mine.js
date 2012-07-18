@@ -167,8 +167,12 @@ var Mine = function() {
 	
 	Mine.prototype.get = function (x, y) {
 		if (x < 0 || y < 0 || x >= this.width || y >= this.height) return '#';
-		return this.map[y][x];
-	}
+		return this.map[y+2][x+1];
+	};
+	
+	Mine.prototype.getRobot = function () {
+		return { x: this.robot.x - 1, y: this.robot.y - 2 };
+	};
 	
 	Mine.prototype.validMove = function (command) {
 		if (this.state != ALIVE) return false;
