@@ -1,0 +1,13 @@
+:focus {outline:none;}
+::-moz-focus-inner {border:0;}
+#main_game_movesDeco {width: 100%;}
+#main_game .onyx-input-decorator {border: none}
+.sprite-lambda { width: 16px !important; height: 16px !important;
+	background: yellow;
+}
+#main_scroller_strategy_client > div {
+	display: inline-block;
+}
+body,.onyx { background-color: #4C4C4C }
+
+.help-key { padding-right: 10px; }

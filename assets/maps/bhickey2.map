@@ -1,0 +1,28 @@
+###L######################
+#W#R  #*****#!#\\\\\\\\\##
+#*#    ..\..  #\\\\\\\*\##
+#*#A 2####### ########.###
+#*#   #*****# #*****#B 3##
+#*#    ..\..   ..\..    ##
+#**E 5 ##############   ##
+#***.##C    1\   D#   ####
+#***. #****###****#  ***##
+#***  #G...\4 ...H#  ..\ #
+#\##  ################# ##
+#\\#   #*****#F  6##*** ##
+#\\#    ..\..       ... ##
+####################### ##
+##########################
+
+Water 0
+Flooding 20
+Waterproof 18
+Trampoline A targets 1
+Trampoline B targets 1
+Trampoline C targets 2
+Trampoline D targets 3
+Trampoline E targets 4
+Trampoline F targets 4
+Trampoline G targets 5
+Trampoline H targets 6
+Author bhickey (https://gist.github.com/3114986)

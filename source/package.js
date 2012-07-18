@@ -1,6 +1,9 @@
 enyo.depends(
 	"$lib/layout",
 	"$lib/onyx",
-	"App.css",
-	"App.js"
+	"TabPanels.js",
+	"mine.js",
+	"../assets/maps.js",
+	"lamin.css",
+	"lamin.js"
 );

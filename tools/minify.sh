@@ -8,4 +8,4 @@ pushd ../enyo/minify > /dev/null
 popd > /dev/null
 
 # build app
-../enyo/tools/minify.sh package.js -output ../build/app
+../enyo/tools/minify.sh package.js -output ../build/lamin

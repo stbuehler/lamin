@@ -9,7 +9,7 @@ FOLDER=deploy
 SUFFIX=`date "+-%Y_%m_%d-%I_%M_%S%p"`
 
 # The grandparent folder for this script
-SOURCE=$(cd `dirname $0`/../; pwd)
+SOURCE=$(cd ../; pwd)
 
 # extract project folder name
 NAME=${SOURCE##*/}
@@ -46,7 +46,12 @@ mkdir -p "$TARGET/lib"
 cp "$SOURCE/index.html" "$SOURCE/icon.png" "$TARGET"
 
 # copy assets and build
-cp -r "$SOURCE/assets" "$SOURCE/build" "$TARGET"
+cp -r "$SOURCE/build" "$TARGET"
+mkdir "$TARGET/assets"
+cp -a "$SOURCE/assets/"*.png "$TARGET/assets/"
+cp -a "$SOURCE/assets/maps.js" "$TARGET/assets/"
+
+echo "deploy libs"
 
 for i in $SOURCE/lib/*; do
 	o=${i##*/}
@@ -54,7 +59,14 @@ for i in $SOURCE/lib/*; do
 		echo "Deploying $o"
 		$i/deploy.sh "$TARGET/lib/$o"
 	else
-		echo "Copying $o"
-		cp -r $i "$TARGET/lib"
+		echo "No deploy for $i"
+#		echo "Copying $o"
+#		cp -r $i "$TARGET/lib"
 	fi
 done
+
+echo -n "sync to lamin.stbuehler.de? (y/N)"
+read a
+if [ "x$a" == "xy" -o "x$a" == "xY" ]; then
+	rsync -av "$TARGET/" www-default@stbuehler.de:/var/www-lamin/
+fi
