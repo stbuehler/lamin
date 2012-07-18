@@ -518,7 +518,7 @@ enyo.kind({
 
 		// ascii keys are reported as uppercase ascii code
 		var cmd = String.fromCharCode(event.keyCode);
-		if (this.min.validMove(cmd)) {
+		if (this.mine.validMove(cmd)) {
 			this.addMoves(cmd);
 		} else if (cmd == 'C') { // clear
 			this.resetMoves();
@@ -674,13 +674,13 @@ enyo.kind({
 		text: ""
 	},
 
-	style: "margin: 0 auto; text-align: center;",
-
-	components: [ { kind: "enyo.FittableRows", style: "display: inline-block; text-align: left; height: 100%", components: [
-		{ fit: true, name: "scroller", kind: "enyo.Scroller", horizontal: "hidden", vertical: "auto", touch: false, thumb: false, components: [
-			{ name: "client", allowHtml: true, classes: "enyo-unselectable", style: "padding-right: 10px;" }
+	components: [
+		{ kind: "enyo.Scroller", style: "height: 100%; width: 100%", horizontal: "hidden", vertical: "auto", touch: false, thumb: false, components: [
+			{ style: "margin: 0 auto; text-align: center;", components: [
+				{ name: "client", allowHtml: true, classes: "enyo-unselectable", style: "display: inline-block; text-align: left; padding-right: 10px;" }
+			] }
 		] }
-	] } ],
+	],
 
 	create: function() {
 		this.inherited(arguments);
@@ -700,10 +700,8 @@ enyo.kind({
 		mine: false
 	},
 
-	style: "margin: 0 auto; text-align: center;",
-
-	components: [ { kind: "enyo.FittableRows", style: "display: inline-block; text-align: left; height: 100%", components: [
-		{ name: "scroller", kind: "enyo.Scroller", horizontal: "hidden", vertical: "auto", touch: false, thumb: false, fit: true, components: [
+	components: [ { kind: "enyo.Scroller", style: "height: 100%; width: 100%", horizontal: "hidden", vertical: "auto", touch: false, thumb: false, components: [
+		{ style: "margin: 0 auto; text-align: center;", components: [
 			{ kind: "enyo.FittableRows", classes: "enyo-unselectable", style: "padding-right: 10px;", components: [
 				{ content: "Level source", tag: "h3" },
 				{ kind: "onyx.InputDecorator", components: [
@@ -728,15 +726,15 @@ enyo.kind({
 	rendered: function() {
 		this.$.levelSource.setAttribute("readonly", "readonly");
 		this.$.levelSource.setAttribute("cols", "80");
-		this.$.levelSource.setAttribute("rows", "15");
+		this.$.levelSource.setAttribute("rows", "1");
 
 		this.$.moves.setAttribute("readonly", "readonly");
 		this.$.moves.setAttribute("cols", "80");
-		this.$.moves.setAttribute("rows", "3");
+		this.$.moves.setAttribute("rows", "1");
 
 		this.$.map.setAttribute("readonly", "readonly");
 		this.$.map.setAttribute("cols", "80");
-		this.$.map.setAttribute("rows", "10");
+		this.$.map.setAttribute("rows", "1");
 
 		this.levelChanged();
 		this.mineChanged();
@@ -751,7 +749,10 @@ enyo.kind({
 	},
 
 	levelChanged: function() {
-		this.$.levelSource.setValue(this.level ? this.level.map : '');
+		var txt = this.level ? this.level.map : '';
+		txt = txt.replace(/\n*\Z/, '');
+		this.$.levelSource.setValue(txt);
+		this.$.levelSource.setAttribute("rows", txt.split('\n').length);
 	},
 
 	setMine: function(mine) {
@@ -762,6 +763,9 @@ enyo.kind({
 	mineChanged: function() {
 		this.$.moves.setValue(this.mine ? this.mine.moves : '');
 		this.$.map.setValue(this.mine ? this.mine.getMap().map(function(v) { return v.join(''); }).join('\n') : '');
+		this.$.moves.setAttribute("rows", this.mine ? Math.max(1, Math.ceil(this.mine.moves.length / 80)) : 1);
+		this.$.map.setAttribute("cols", this.mine ? this.mine.width : 1);
+		this.$.map.setAttribute("rows", this.mine ? this.mine.height : 1);
 	}
 });
 
