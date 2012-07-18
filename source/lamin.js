@@ -484,7 +484,7 @@ enyo.kind({
 			this.$.trampolines.createComponent(
 				{ kind: "enyo.FittableColumns", components: [
 					{ kind: "lamin.SpriteImage", type: ts[k], size: 24 },
-					{ content: "\u21AA", style: "text-align:center; width: 22px" },
+					{ kind: "lamin.SpriteImage", type: 'arrow', size: 22, style: "text-align:center;" },
 					{ kind: "lamin.SpriteImage", type: t.sources[ts[k]].target, size: 24 }
 				] }, { owner: this }
 			);
@@ -502,6 +502,7 @@ enyo.kind({
 		this.$.waterRow2.setShowing(this.mine.water.active);
 		this.$.beardRow1.setShowing(this.mine.beard.active);
 		this.$.beardRow2.setShowing(this.mine.beard.active);
+		this.resized();
 	},
 	resetMoves: function() {
 		this._resetMoves();
