@@ -298,13 +298,13 @@ enyo.kind({
 	},
 
 	components: [
-		{ kind: "lamin.center", fit: true, components: [ { name: "wrapper", components: [
-			{ kind: "enyo.FittableRows", components: [
-				{ name: "movesDeco", kind: "onyx.InputDecorator", layoutKind: "enyo.FittableColumnsLayout",  components: [
-					{ content: "Moves: " },
-					{ kind: "onyx.Input", name: "moves", placeholder:"No moves yet",value:"", fit: true, onkeydown: "onMovesKeyDown", oninput: "onMovesInput" },
-					{ name: "moveCount", content: "&nbsp;0", allowHtml: true }
-				] },
+		{ kind: "lamin.center", fit: true, components: [ /*{ name: "wrapper", components: [*/
+// 			{ kind: "enyo.FittableRows", components: [
+// 				{ name: "movesDeco", kind: "onyx.InputDecorator", layoutKind: "enyo.FittableColumnsLayout",  components: [
+// 					{ content: "Moves: " },
+// 					{ kind: "onyx.Input", name: "moves", placeholder:"No moves yet",value:"", fit: true, onkeydown: "onMovesKeyDown", oninput: "onMovesInput" },
+// 					{ name: "moveCount", content: "&nbsp;0", allowHtml: true }
+// 				] },
 				{ kind: "enyo.FittableColumns", classes: "enyo-unselectable", noStretch: true, components: [
 					{ kind: "enyo.FittableRows", style: "width: 80px;padding-right: 10px", components: [
 						{ kind: "enyo.FittableColumns", components: [
@@ -341,8 +341,8 @@ enyo.kind({
 					] },
 					{ name: "trampolines", kind: "enyo.FittableRows", style: "width: 80px;padding-left: 10px" }
 				] }
-			] }
-		] } ] },
+// 			] }
+		/*] }*/ ] },
 		{ kind: "Signals", onkeydown: "handleKeydown" }
     ],
 
@@ -356,7 +356,7 @@ enyo.kind({
 
 	rendered: function() {
 		this.inherited(arguments);
-		this.$.moves.setValue(this.mine ? this.mine.moves : '');
+// 		this.$.moves.setValue(this.mine ? this.mine.moves : '');
 	},
 
 	levelChanged: function() {
@@ -365,16 +365,16 @@ enyo.kind({
 
 	_mineChanged: function() {
 		this.$.canvas.update();
-		var n = this.$.moves.hasNode();
-		var atend = (n && n.selectionStart === this.$.moves.getValue().length);
-		var inputHasFocus = document.activeElement === this.$.moves.hasNode();
-		this.$.moves.setValue(this.mine.moves);
-		if (atend && n.setSelectionRange) {
-			n.setSelectionRange(this.mine.moves.length, this.mine.moves.length);
-			if (!inputHasFocus) this.$.moves.hasNode().blur();
-		}
+// 		var n = this.$.moves.hasNode();
+// 		var atend = (n && n.selectionStart === this.$.moves.getValue().length);
+// 		var inputHasFocus = document.activeElement === this.$.moves.hasNode();
+// 		this.$.moves.setValue(this.mine.moves);
+// 		if (atend && n.setSelectionRange) {
+// 			n.setSelectionRange(this.mine.moves.length, this.mine.moves.length);
+// 			if (!inputHasFocus) this.$.moves.hasNode().blur();
+// 		}
 		this.$.score.setContent(this.mine.score);
-		this.$.moveCount.setContent("&nbsp;" + this.mine.moves.length);
+// 		this.$.moveCount.setContent("&nbsp;" + this.mine.moves.length);
 		this.$.lambdas.setContent(this.mine.found_lambdas + "/" + (this.mine.lambdas+this.mine.found_lambdas));
 		this.$.flooding.setContent(this.mine.water.flooding ? (this.mine.moves.length % this.mine.water.flooding) + "/" + this.mine.water.flooding : '');
 		this.$.beard.setContent(this.mine.beard.growth ? (this.mine.moves.length % this.mine.beard.growth) + "/" + this.mine.beard.growth : '');
@@ -405,8 +405,8 @@ enyo.kind({
 	},
 
 	onCanvasSizeChanged: function(sender, event) {
-		this.$.wrapper.setBounds({width: event.width + 160}, "px");
-		this.$.movesDeco.layout.reflow();
+// 		this.$.wrapper.setBounds({width: event.width + 160}, "px");
+// 		this.$.movesDeco.layout.reflow();
 // 		this.reflow();
 	},
 
@@ -472,9 +472,9 @@ enyo.kind({
 		case 8: // backspace -> undo
 			this.undoMove();
 			break;
-		case 13: // focus text field
-			this.$.moves.focus();
-			break;
+// 		case 13: // focus text field
+// 			this.$.moves.focus();
+// 			break;
 		case 37: // cursor left
 			if (!this.mine.validMove('L')) break;
 			this.addMoves('L');
@@ -620,8 +620,8 @@ enyo.kind({
 	style: "margin: 0 auto; text-align: center;",
 
 	components: [ { kind: "enyo.FittableRows", style: "display: inline-block; text-align: left; height: 100%", components: [
-		{ fit: true, name: "scroller", kind: "enyo.Scroller", horizontal: "hidden", vertical: "auto", touch: true, thumb: true, components: [
-			{ name: "client", allowHtml: true, classes: "enyo-unselectable" }
+		{ fit: true, name: "scroller", kind: "enyo.Scroller", horizontal: "hidden", vertical: "auto", touch: false, thumb: false, components: [
+			{ name: "client", allowHtml: true, classes: "enyo-unselectable", style: "padding-right: 10px;" }
 		] }
 	] } ],
 
@@ -636,6 +636,79 @@ enyo.kind({
 });
 
 enyo.kind({
+	name: "lamin.LevelInfo",
+
+	published: {
+		level: false,
+		mine: false
+	},
+
+	style: "margin: 0 auto; text-align: center;",
+
+	components: [ { kind: "enyo.FittableRows", style: "display: inline-block; text-align: left; height: 100%", components: [
+		{ name: "scroller", kind: "enyo.Scroller", horizontal: "hidden", vertical: "auto", touch: false, thumb: false, fit: true, components: [
+			{ kind: "enyo.FittableRows", classes: "enyo-unselectable", style: "padding-right: 10px;", components: [
+				{ content: "Level source", tag: "h3" },
+				{ kind: "onyx.InputDecorator", components: [
+					{ name: "levelSource", kind: "onyx.TextArea", onfocus: "onTextFocus" }
+				]},
+				{ content: "Current moves", tag: "h3" },
+				{ kind: "onyx.InputDecorator", components: [
+					{ name: "moves", kind: "onyx.TextArea", onfocus: "onTextFocus" }
+				]},
+				{ content: "Current state", tag: "h3" },
+				{ kind: "onyx.InputDecorator", components: [
+					{ name: "map", kind: "onyx.TextArea", onfocus: "onTextFocus" }
+				]},
+			] }
+		] }
+	] } ],
+
+	create: function() {
+		this.inherited(arguments);
+	},
+
+	rendered: function() {
+		this.$.levelSource.setAttribute("readonly", "readonly");
+		this.$.levelSource.setAttribute("cols", "80");
+		this.$.levelSource.setAttribute("rows", "15");
+
+		this.$.moves.setAttribute("readonly", "readonly");
+		this.$.moves.setAttribute("cols", "80");
+		this.$.moves.setAttribute("rows", "3");
+
+		this.$.map.setAttribute("readonly", "readonly");
+		this.$.map.setAttribute("cols", "80");
+		this.$.map.setAttribute("rows", "10");
+
+		this.levelChanged();
+		this.mineChanged();
+	},
+
+	onTextFocus: function(sender, event) {
+		var n = sender.hasNode();
+		window.setTimeout(function() {
+			// delay select, workaround http://code.google.com/p/chromium/issues/detail?id=32865
+			n.select();
+		}, 0);
+	},
+
+	levelChanged: function() {
+		this.$.levelSource.setValue(this.level ? this.level.map : '');
+	},
+
+	setMine: function(mine) {
+		this.mine = mine;
+		this.mineChanged(); // always trigger changed
+	},
+
+	mineChanged: function() {
+		this.$.moves.setValue(this.mine ? this.mine.moves : '');
+		this.$.map.setValue(this.mine ? this.mine.getMap().map(function(v) { return v.join(''); }).join('\n') : '');
+	}
+});
+
+enyo.kind({
 	name: "lamin.Main",
 
 	classes: "onyx",
@@ -645,7 +718,8 @@ enyo.kind({
 	index: 0,
 	
 	components: [
-		{ name: "game", kind: "lamin.Game", caption: "Play", onMineChanged: "handleMineChanged" },
+		{ caption: "Play", name: "game", kind: "lamin.Game", onMineChanged: "handleMineChanged" },
+		{ caption: "Level info", name: "info", kind: "lamin.LevelInfo" },
 		{ caption: "Help", kind: "lamin.Text", text: lamin.helpText },
 		{ caption: "Rules", kind: "lamin.Text", text: lamin.rulesText },
 
@@ -723,6 +797,7 @@ enyo.kind({
 		this.level = level;
 		if (level) {
 			this.$.game.setLevel(level);
+			this.$.info.setLevel(level);
 			this.$.levelMenuTitle.setContent("Level " + level.name);
 		}
 	},
@@ -734,6 +809,7 @@ enyo.kind({
 	},
 
 	handleMineChanged: function(sender, event) {
+		this.$.info.setMine(event.mine);
 		if (false !== this.fragmentUpdateTimer) {
 			window.clearTimeout(this.fragmentUpdateTimer);
 		}
