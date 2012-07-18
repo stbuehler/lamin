@@ -346,7 +346,7 @@ enyo.kind({
 							{ name: "underwater", content: "", style: "text-align: right;", fit: true }
 						] },
 						{ name: "waterRow2", kind: "enyo.FittableColumns", components: [
-							{ content: "\u223C", style: "color: blue;text-align:center;width:24px;" },
+							{ kind: "lamin.SpriteImage", type: 'flooding', size: 24 },
 							{ name: "flooding", content: "", style: "text-align: right;", fit: true }
 						] },
 						{ name: "beardRow1", kind: "enyo.FittableColumns", components: [
@@ -636,7 +636,7 @@ breaks down into a <img src="assets/lambda.png" height="20" width="20"></li>\
 <li>Beard <img src="assets/beard.png" height="20" width="20"> has a growth rate, displayed on the left side.<br>\
 Once the counter hits the top, all beards grow into the<br>\
 space around them</li>\
-<li>The water level has a flooding <span style="color:blue">&#x223C;</span> property; similar to beard<br>\
+<li>The water level has a flooding <img src="assets/flooding.png" height="20" width="20"> property; similar to beard<br>\
 growth the water level rises by one if the counter is full</li>\
 <li>You can only stay under water for a limited amount of moves <img src="assets/minerwater.png" height="20" width="20"></li>\
 <li>\
