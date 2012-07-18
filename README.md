@@ -1,6 +1,9 @@
-bootplate
-=========
+lamin - Lambda Miner
+====================
 
-Application template for packaged Enyo
+ * browsergame, written in javascript
+ * based on the task for the ICFP(International Conference on Functional Programming) Programming Contest 2012
+   * http://icfpcontest2012.wordpress.com/
+   * http://www.icfpconference.org/
 
-Refer to the [Wiki](https://github.com/enyojs/enyo/wiki/Bootplate) for how to get started.
+Map sources are in the assets/maps directory.
