@@ -403,6 +403,7 @@ enyo.kind({
 // 		this.$.moveCount.setContent("&nbsp;" + this.mine.moves.length);
 		this.$.lambdas.setContent(this.mine.found_lambdas + "/" + (this.mine.lambdas+this.mine.found_lambdas));
 		this.$.flooding.setContent(this.mine.water.flooding ? (this.mine.moves.length % this.mine.water.flooding) + "/" + this.mine.water.flooding : '');
+		this.$.razors.setContent(this.mine.razors);
 		this.$.beard.setContent(this.mine.beard.growth ? (this.mine.moves.length % this.mine.beard.growth) + "/" + this.mine.beard.growth : '');
 		this.$.underwater.setContent((this.mine.water.flooding || this.mine.water.level > 0) ? this.mine.moves_below_water + "/" + this.mine.water.proof : '');
 		this.doMineChanged({mine: this.mine});
