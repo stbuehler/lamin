@@ -284,7 +284,7 @@ enyo.kind({
 		this._updateSize();
 		var tsize = this.tileSize;
 
-		var waterLevel = Math.max(mine.water_level, 0);
+		var waterLevel = Math.max(mine.water.level + (mine.water.flooding ? (mine.moves.length / mine.water.flooding) : 0), 0);
 
 		var ctx = c.getContext('2d');
 		ctx.save();
