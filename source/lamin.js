@@ -332,7 +332,7 @@ enyo.kind({
 // 					{ name: "moveCount", content: "&nbsp;0", allowHtml: true }
 // 				] },
 				{ kind: "enyo.FittableColumns", classes: "enyo-unselectable", noStretch: true, components: [
-					{ kind: "enyo.FittableRows", style: "width: 80px;padding-right: 10px", components: [
+					{ layoutKind: "enyo.FittableRowsLayout", classes: "lamin-left-box", components: [
 						{ kind: "enyo.FittableColumns", components: [
 							{ kind: "lamin.SpriteImage", type: 'star', size: 24 },
 							{ name: "score", content: "0", style: "text-align: right;", fit: true }
@@ -359,13 +359,13 @@ enyo.kind({
 						] }
 					] },
 					{ name: "canvas", kind: "lamin.Canvas", onSizeChanged: "onCanvasSizeChanged", onTileTap: "onCanvasTileTap" },
-					{ name: "notrampolines", kind: "enyo.FittableRows", style: "width: 80px;padding-left: 10px", components: [
+					{ name: "notrampolines", kind: "enyo.FittableRows", classes: "lamin-right-box", components: [
 						{ kind: "enyo.FittableColumns", components: [
 							{ content: "No", style: "width: 46px" }, // fit doesn't work here.
 							{ kind: "lamin.SpriteImage", type: 'trampoline', size: 24 }
 						] }
 					] },
-					{ name: "trampolines", kind: "enyo.FittableRows", style: "width: 80px;padding-left: 10px" }
+					{ name: "trampolines", kind: "enyo.FittableRows", classes: "lamin-right-box" }
 				] }
 // 			] }
 		/*] }*/ ] },
@@ -427,12 +427,12 @@ enyo.kind({
 	reflow: function() {
 		this.inherited(arguments);
 		var b = this.getBounds();
-		this.$.canvas.setBoundWidth(b.width - 240);
+		this.$.canvas.setBoundWidth(b.width - 280);
 		this.$.canvas.setBoundHeight(b.height - 80);
 	},
 
 	onCanvasSizeChanged: function(sender, event) {
-// 		this.$.wrapper.setBounds({width: event.width + 160}, "px");
+// 		this.$.wrapper.setBounds({width: event.width + 200}, "px");
 // 		this.$.movesDeco.layout.reflow();
 // 		this.reflow();
 	},
@@ -485,7 +485,7 @@ enyo.kind({
 			this.$.trampolines.createComponent(
 				{ kind: "enyo.FittableColumns", components: [
 					{ kind: "lamin.SpriteImage", type: ts[k], size: 24 },
-					{ kind: "lamin.SpriteImage", type: 'arrow', size: 22, style: "text-align:center;" },
+					{ kind: "lamin.SpriteImage", type: 'arrow', size: 22, style: "text-align:center;margin: 0 5px;" },
 					{ kind: "lamin.SpriteImage", type: t.sources[ts[k]].target, size: 24 }
 				] }, { owner: this }
 			);
@@ -680,7 +680,7 @@ enyo.kind({
 	components: [
 		{ kind: "enyo.Scroller", style: "height: 100%; width: 100%", horizontal: "hidden", vertical: "auto", touch: false, thumb: false, components: [
 			{ style: "margin: 0 auto; text-align: center;", components: [
-				{ name: "client", allowHtml: true, classes: "enyo-unselectable", style: "display: inline-block; text-align: left; padding-right: 10px;" }
+				{ name: "client", allowHtml: true, classes: "enyo-unselectable", style: "display: inline-block; text-align: left; padding-right: 10px; color: black;" }
 			] }
 		] }
 	],
