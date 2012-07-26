@@ -361,7 +361,7 @@ enyo.kind({
 					{ name: "canvas", kind: "lamin.Canvas", onSizeChanged: "onCanvasSizeChanged", onTileTap: "onCanvasTileTap" },
 					{ name: "notrampolines", kind: "enyo.FittableRows", classes: "lamin-right-box", components: [
 						{ kind: "enyo.FittableColumns", components: [
-							{ content: "No", style: "width: 46px" }, // fit doesn't work here.
+							{ content: "No", style: "width: 56px" }, // fit doesn't work here.
 							{ kind: "lamin.SpriteImage", type: 'trampoline', size: 24 }
 						] }
 					] },
