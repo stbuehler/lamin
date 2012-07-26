@@ -8,6 +8,10 @@
 #main_scroller_strategy_client > div {
 	display: inline-block;
 }
-body,.onyx { background-color: #4C4C4C }
+body,.onyx {
+/*	background-color: #4C4C4C;*/
+	background-color: #808080;
+	color: black;
+}
 
 .help-key { padding-right: 10px; }
