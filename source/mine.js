@@ -335,7 +335,10 @@ var Mine = function() {
 			growBeard = true;
 		}
 		for (y = 0; y < map.length; ++y) { newMap[y] = this.map[y].slice(); }
-		
+
+		// whether the rock above the robot just falled into that place
+		// the rock might be overwritten later in the update phase, so it mustn't result in instant death
+		var checkCrushed = false;
 		for (y = 2; y < 2+this.height; ++y) {
 			for (x = 1; x <= this.width; ++x) {
 				c = map[y][x];
@@ -346,19 +349,19 @@ var Mine = function() {
 						newMap[y-1][x] = c;
 						if ('@' === c && ' ' != map[y-2][x]) newMap[y-1][x] = '\\';
 						newMap[y][x] = ' ';
-						if ('R' === map[y-2][x]) this._crushed();
+						if ('R' === map[y-2][x]) checkCrushed = true;
 					} else if ((below === '*' || below === '\\' || below === '@') && ' ' === map[y-1][x+1] && ' ' === map[y][x+1]) {
 						// fall right
 						newMap[y-1][x+1] = c;
 						if ('@' === c && ' ' != map[y-2][x+1]) newMap[y-1][x+1] = '\\';
 						newMap[y][x] = ' ';
-						if ('R' == map[y-2][x+1]) this._crushed();
+						if ('R' == map[y-2][x+1]) checkCrushed = true;
 					} else if ((below === '*' || below === '@') && ' ' === map[y-1][x-1] && ' ' === map[y][x-1]) {
 						// fall left
 						newMap[y-1][x-1] = c;
 						if ('@' === c && ' ' != map[y-2][x-1]) newMap[y-1][x-1] = '\\';
 						newMap[y][x] = ' ';
-						if ('R' == map[y-2][x-1]) this._crushed();
+						if ('R' == map[y-2][x-1]) checkCrushed = true;
 					}
 				} else if (growBeard && 'W' === c) {
 					for (i = -1; i <= 1; ++i) for (j = -1; j <= 1; ++j) {
@@ -367,6 +370,7 @@ var Mine = function() {
 				}
 			}
 		}
+		if (checkCrushed && ('*' === newMap[this.robot.y+1][this.robot.x] || '@' === newMap[this.robot.y+1][this.robot.x])) this._crushed();
 		this.map = newMap;
 		
 		if (this.robot.y < this.water_level + 2) {
