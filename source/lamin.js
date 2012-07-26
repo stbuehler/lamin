@@ -341,6 +341,14 @@ enyo.kind({
 							{ kind: "lamin.SpriteImage", type: '\\', size: 24 },
 							{ name: "lambdas", content: "0/0", style: "text-align: right;", fit: true }
 						] },
+						{ name: "beardRow1", kind: "enyo.FittableColumns", components: [
+							{ kind: "lamin.SpriteImage", type: '!', size: 24 },
+							{ name: "razors", content: "0", style: "text-align: right;", fit: true }
+						] },
+						{ name: "beardRow2", kind: "enyo.FittableColumns", components: [
+							{ kind: "lamin.SpriteImage", type: 'W', size: 24 },
+							{ name: "beard", content: "", style: "text-align: right;", fit: true }
+						] },
 						{ name: "waterRow1", kind: "enyo.FittableColumns", components: [
 							{ kind: "lamin.SpriteImage", type: 'minerwater', size: 24 },
 							{ name: "underwater", content: "", style: "text-align: right;", fit: true }
@@ -349,13 +357,9 @@ enyo.kind({
 							{ kind: "lamin.SpriteImage", type: 'flooding', size: 24 },
 							{ name: "flooding", content: "", style: "text-align: right;", fit: true }
 						] },
-						{ name: "beardRow1", kind: "enyo.FittableColumns", components: [
-							{ kind: "lamin.SpriteImage", type: '!', size: 24 },
-							{ name: "razors", content: "0", style: "text-align: right;", fit: true }
-						] },
-						{ name: "beardRow2", kind: "enyo.FittableColumns", components: [
-							{ kind: "lamin.SpriteImage", type: 'W', size: 24 },
-							{ name: "beard", content: "", style: "text-align: right;", fit: true }
+						{ name: "waterAir", classes: "lamin-water-air", components: [
+							{ name: "waterAirTop", classes: "top" },
+							{ name: "waterAirBottom", classes: "bottom" }
 						] }
 					] },
 					{ name: "canvas", kind: "lamin.Canvas", onSizeChanged: "onCanvasSizeChanged", onTileTap: "onCanvasTileTap" },
@@ -406,6 +410,7 @@ enyo.kind({
 		this.$.razors.setContent(this.mine.razors);
 		this.$.beard.setContent(this.mine.beard.growth ? (this.mine.moves.length % this.mine.beard.growth) + "/" + this.mine.beard.growth : '');
 		this.$.underwater.setContent((this.mine.water.flooding || this.mine.water.level > 0) ? this.mine.moves_below_water + "/" + this.mine.water.proof : '');
+		this.$.waterAirTop.applyStyle("height", this.mine.water.proof ? (100 * this.mine.moves_below_water / this.mine.water.proof) + "%" : "0");
 		this.doMineChanged({mine: this.mine});
 	},
 
@@ -501,6 +506,7 @@ enyo.kind({
 
 		this.$.waterRow1.setShowing(this.mine.water.active);
 		this.$.waterRow2.setShowing(this.mine.water.active);
+		this.$.waterAir.setShowing(this.mine.water.active);
 		this.$.beardRow1.setShowing(this.mine.beard.active);
 		this.$.beardRow2.setShowing(this.mine.beard.active);
 		this.resized();
