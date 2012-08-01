@@ -387,6 +387,11 @@ enyo.kind({
 	rendered: function() {
 		this.inherited(arguments);
 // 		this.$.moves.setValue(this.mine ? this.mine.moves : '');
+		// try to handle keys in the capture phase (instead of bubble)
+		var self = this;
+		try {
+			document.addEventListener('keydown', function(e) {return self.handleKeydown(self, e);}, true);
+		} catch(e) { }
 	},
 
 	levelChanged: function() {
@@ -814,6 +819,15 @@ enyo.kind({
 		// gets loaded from global mineMaps
 		levels: [],
 		levelIndex: 0
+	},
+
+	rendered: function() {
+		this.inherited(arguments);
+		var self = this;
+		// try to handle keys in the capture phase (instead of bubble)
+		try {
+			document.addEventListener('keydown', function(e) {return self.handleKeydown(self, e);}, true);
+		} catch(e) { }
 	},
 
 	create: function() {
