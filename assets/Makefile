@@ -1,5 +1,7 @@
 
 MAPS=
+MAPS+=$(wildcard maps/full*.map)
+MAPS+=$(wildcard maps/lightning*.map)
 MAPS+=$(wildcard maps/horock*.map)
 MAPS+=$(wildcard maps/beard*.map)
 MAPS+=$(wildcard maps/trampoline*.map)
