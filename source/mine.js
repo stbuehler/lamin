@@ -370,7 +370,7 @@ var Mine = function() {
 				}
 			}
 		}
-		if (checkCrushed && ('*' === newMap[this.robot.y+1][this.robot.x] || '@' === newMap[this.robot.y+1][this.robot.x])) this._crushed();
+		if (checkCrushed && ('*' === newMap[this.robot.y+1][this.robot.x] || '\\' === newMap[this.robot.y+1][this.robot.x])) this._crushed();
 		this.map = newMap;
 		
 		if (this.robot.y < this.water_level + 2) {
