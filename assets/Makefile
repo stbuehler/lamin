@@ -1,12 +1,12 @@
 
 MAPS=
-MAPS+=$(wildcard maps/full*.map)
-MAPS+=$(wildcard maps/lightning*.map)
+MAPS+=$(wildcard maps/full?.map maps/full1?.map)
+MAPS+=$(wildcard maps/lightning?.map maps/lightning1?.map)
 MAPS+=$(wildcard maps/horock*.map)
 MAPS+=$(wildcard maps/beard*.map)
 MAPS+=$(wildcard maps/trampoline*.map)
 MAPS+=$(wildcard maps/flood*.map)
-MAPS+=$(wildcard maps/contest?.map maps/contest10.map)
+MAPS+=$(wildcard maps/contest?.map maps/contest1?.map)
 MAPS+=maps/identity.map
 MAPS+=$(wildcard maps/ems*.map)
 MAPS+=maps/pacman.map maps/pacman2.map

@@ -17,7 +17,7 @@ var Mine = function() {
 	Mine.prototype.parse = function(map) {
 		var lines, i, width, height, pair, x, line;
 		this.orig_map = map;
-		lines = map.split(/\r\n?|\r?\n/);
+		lines = map.split(/ *\r\n?| *\r?\n/);
 		
 		width = 0;
 		height = lines.length;
